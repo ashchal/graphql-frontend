@@ -1,4 +1,6 @@
+import React from "react";
 import { useQuery, useLazyQuery, gql } from "@apollo/client";
+import { CountryDetail } from "./countryDetail";
 
 const QUERY_ALL_COUNTRIES = gql`
   query GetAllCountries {
@@ -29,13 +31,13 @@ export const DisplayData = () => {
   const [fetchCountry, { data: countryDAta }] = useLazyQuery(
     QUERY_COUNTRY_BY_CODE
   );
+  const [countryCode, setCountryCode] = React.useState("AD");
 
   if (loading) {
     return <div>data is loading</div>;
   }
   return (
     <div>
-      displayData
       <div style={{ display: "flex", flexDirection: "row" }}>
         <div>
           {data.countries.map(
@@ -53,6 +55,7 @@ export const DisplayData = () => {
                 <div
                   key={index}
                   onClick={() => {
+                    setCountryCode(item.code);
                     fetchCountry({ variables: { code: item.code } });
                   }}
                 >
@@ -71,6 +74,10 @@ export const DisplayData = () => {
               {/* country:{countryDAta.country.name} */}
             </div>
           )}
+
+          <div>
+            <CountryDetail code={countryCode} />
+          </div>
         </div>
       </div>
     </div>
